@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}Create account · Nexora{% endblock %}
+{% block content %}<section class="auth-card"><p class="eyebrow">YOUR PEOPLE ARE HERE</p><h1>Create your account</h1><p class="muted">A thoughtful space to share what matters.</p>
+<form method="post" class="stack-form">{% csrf_token %}{% for field in form %}<label>{{ field.label }}{{ field }}{% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}{% for error in field.errors %}<small class="error">{{ error }}</small>{% endfor %}</label>{% endfor %}{% for error in form.non_field_errors %}<p class="error">{{ error }}</p>{% endfor %}<button class="button primary" type="submit">Create account</button></form>
+<p class="muted centered">Already have an account? <a href="{% url 'login' %}">Log in</a></p></section>{% endblock %}

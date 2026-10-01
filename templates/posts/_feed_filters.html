@@ -1,0 +1,7 @@
+<nav class="feed-filters" aria-label="Filter feed">
+  <a class="feed-filter{% if feed_filter == 'for-you' %} is-active{% endif %}" href="{% url 'feed' %}"{% if feed_filter == 'for-you' %} aria-current="page"{% endif %}>For you</a>
+  {% if user.is_authenticated %}
+    <a class="feed-filter{% if feed_filter == 'following' %} is-active{% endif %}" href="?filter=following"{% if feed_filter == 'following' %} aria-current="page"{% endif %}>Following</a>
+    <a class="feed-filter{% if feed_filter == 'mine' %} is-active{% endif %}" href="?filter=mine"{% if feed_filter == 'mine' %} aria-current="page"{% endif %}>My posts</a>
+  {% endif %}
+</nav>

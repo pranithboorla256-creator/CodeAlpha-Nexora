@@ -1,0 +1,2 @@
+{% extends 'base.html' %}{% block title %}Edit profile · Nexora{% endblock %}
+{% block content %}<section class="auth-card"><p class="eyebrow">MAKE IT YOURS</p><h1>Edit your profile</h1><form method="post" enctype="multipart/form-data" class="stack-form">{% csrf_token %}{% for field in form %}<label>{{ field.label }}{{ field }}{% for error in field.errors %}<small class="error">{{ error }}</small>{% endfor %}</label>{% endfor %}<button class="button primary" type="submit">Save changes</button></form></section>{% endblock %}

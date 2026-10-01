@@ -1,0 +1,2 @@
+{% extends 'base.html' %}{% block title %}{{ kind|title }} · @{{ person.username }}{% endblock %}
+{% block content %}<section class="page-heading"><a class="back-link" href="{% url 'profile' person.username %}">← @{{ person.username }}</a><p class="eyebrow">COMMUNITY</p><h1>{{ kind|title }}</h1></section><section class="people-list">{% for person in users %}{% include 'accounts/_person.html' with person=person %}{% empty %}<div class="empty-state"><h2>No {{ kind }} yet</h2><p>People will show up here when they connect.</p></div>{% endfor %}</section>{% endblock %}

@@ -1,0 +1,4 @@
+{% extends 'base.html' %}
+{% block title %}Log in · Nexora{% endblock %}
+{% block content %}<section class="auth-card"><p class="eyebrow">WELCOME BACK</p><h1>Log in to Nexora</h1><p class="muted">Pick up where your community left off.</p>
+<form method="post" class="stack-form">{% csrf_token %}{% if form.non_field_errors %}<p class="error">Your username and password didn’t match. Please try again.</p>{% endif %}{% for field in form %}<label>{{ field.label }}{{ field }}{% for error in field.errors %}<small class="error">{{ error }}</small>{% endfor %}</label>{% endfor %}<input type="hidden" name="next" value="{{ next }}"><button class="button primary" type="submit">Log in</button></form><p class="muted centered">New to Nexora? <a href="{% url 'register' %}">Create an account</a></p></section>{% endblock %}

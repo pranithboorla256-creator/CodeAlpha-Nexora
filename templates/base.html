@@ -1,0 +1,42 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7fb">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('nexora-theme')||'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
+  <title>{% block title %}Nexora — Connect. Share. Belong.{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/nexora.css' %}">
+  <link rel="stylesheet" href="{% static 'css/social.css' %}">
+  <link rel="stylesheet" href="{% static 'css/review-motion.css' %}">
+  <link rel="stylesheet" href="{% static 'css/ux-polish.css' %}">
+</head>
+<body>
+<header class="topbar"><a class="brand" href="{% url 'feed' %}"><span class="brand-mark">n</span><span>Nexora</span></a>
+  <nav aria-label="Main navigation">
+    <a href="{% url 'feed' %}"{% if request.resolver_match.url_name == 'feed' %} aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">⌂</span>Home</a>
+    <a href="{% url 'search' %}"{% if request.resolver_match.url_name == 'search' %} aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">⌕</span>Search</a>
+    <a href="{% if user.is_authenticated %}{% url 'feed' %}#composer{% else %}{% url 'register' %}{% endif %}" class="nav-create"><span class="nav-icon" aria-hidden="true">＋</span>Create</a>
+    {% if user.is_authenticated %}<a href="{% url 'notifications' %}" class="activity-link{% if request.resolver_match.url_name == 'notifications' %} current-page{% endif %}"{% if request.resolver_match.url_name == 'notifications' %} aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">♡</span>Notifications{% if unread_notification_count %}<span class="notification-badge">{{ unread_notification_count }}</span>{% endif %}</a>
+    <a href="{% url 'profile' user.username %}"{% if request.resolver_match.url_name == 'profile' %} aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">◉</span>Profile</a>
+    <form class="inline-form" action="{% url 'logout' %}" method="post">{% csrf_token %}<button class="nav-button" type="submit">Log out</button></form>
+    {% else %}<a href="{% url 'login' %}">Log in</a><a class="nav-cta" href="{% url 'register' %}">Join Nexora</a>{% endif %}
+  </nav>
+  <button class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><span aria-hidden="true">☾</span></button>
+</header>
+<main class="container">
+  {% if messages %}<div class="messages" aria-live="polite">{% for message in messages %}<div class="toast {{ message.tags }}" role="status"><span class="toast-icon" aria-hidden="true">{% if message.tags == 'success' %}✓{% elif message.tags == 'error' %}!{% else %}i{% endif %}</span><p>{{ message }}</p><button type="button" class="toast-close" aria-label="Dismiss message">×</button></div>{% endfor %}</div>{% endif %}
+  {% block content %}{% endblock %}
+</main>
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a href="{% url 'feed' %}"{% if request.resolver_match.url_name == 'feed' %} aria-current="page"{% endif %}><span aria-hidden="true">⌂</span><small>Home</small></a>
+  <a href="{% url 'search' %}"{% if request.resolver_match.url_name == 'search' %} aria-current="page"{% endif %}><span aria-hidden="true">⌕</span><small>Search</small></a>
+  <a href="{% if user.is_authenticated %}{% url 'feed' %}#composer{% else %}{% url 'register' %}{% endif %}" class="mobile-create"><span aria-hidden="true">＋</span><small>Create</small></a>
+  {% if user.is_authenticated %}<a href="{% url 'notifications' %}"{% if request.resolver_match.url_name == 'notifications' %} aria-current="page"{% endif %}><span aria-hidden="true">♡{% if unread_notification_count %}<i class="mobile-dot" aria-label="{{ unread_notification_count }} unread notifications"></i>{% endif %}</span><small>Activity</small></a>
+  <a href="{% url 'profile' user.username %}"{% if request.resolver_match.url_name == 'profile' %} aria-current="page"{% endif %}><span aria-hidden="true">◉</span><small>Profile</small></a>
+  <form action="{% url 'logout' %}" method="post">{% csrf_token %}<button type="submit" aria-label="Log out"><span aria-hidden="true">↪</span><small>Log out</small></button></form>
+  {% else %}<a href="{% url 'login' %}"><span aria-hidden="true">↪</span><small>Log in</small></a>{% endif %}
+</nav>
+<footer class="footer">Nexora <span>·</span> Connect. Share. Belong.</footer>
+<script src="{% static 'js/nexora.js' %}" defer></script>
+</body></html>

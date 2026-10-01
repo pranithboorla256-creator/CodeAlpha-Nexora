@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% block title %}Discover · Nexora{% endblock %}
+{% block content %}<section class="page-heading"><p class="eyebrow">FIND YOUR COMMUNITY</p><h1>Discover people</h1><p class="muted">Search by username and find your next conversation.</p></section>
+<form method="get" class="search-form"><label class="sr-only" for="search-q">Search usernames</label><span class="search-icon" aria-hidden="true">⌕</span><input id="search-q" type="search" name="q" value="{{ query }}" maxlength="80" placeholder="Search people on Nexora…"><button type="submit" class="button primary">Search</button></form>
+{% if query %}<section class="people-list">{% for person in users %}{% include 'accounts/_person.html' with person=person %}{% empty %}<div class="empty-state"><h2>No people found</h2><p>Try another username.</p></div>{% endfor %}</section>{% endif %}{% endblock %}

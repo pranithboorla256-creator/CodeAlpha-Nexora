@@ -1,0 +1,22 @@
+<article class="post-card" id="post-{{ post.id }}">
+  <header class="post-header">
+    <a class="author-link" href="{% url 'profile' post.author.username %}">
+      <span class="avatar">{% if post.author.profile.avatar %}<img src="{{ post.author.profile.avatar.url }}" alt="">{% else %}{{ post.author.username|first|upper }}{% endif %}</span>
+      <span class="author-meta"><strong>{{ post.author.username }}</strong><span class="author-handle">@{{ post.author.username }}</span><time datetime="{{ post.created_at|date:'c' }}">{{ post.created_at|timesince }} ago</time></span>
+    </a>
+    {% if user == post.author %}<div class="post-menu"><a href="{% url 'edit_post' post.pk %}">Edit</a><form method="post" action="{% url 'delete_post' post.pk %}" onsubmit="return confirm('Delete this post?')">{% csrf_token %}<input type="hidden" name="next" value="{% if request.resolver_match.url_name == 'feed' %}feed{% else %}profile{% endif %}"><button class="text-button danger" type="submit">Delete</button></form></div>{% endif %}
+  </header>
+  <p class="post-content">{{ post.content|linebreaksbr }}</p>
+  <div class="post-actions">
+    <button class="action-button like-button {% if post.user_liked %}is-liked{% endif %}" data-like-url="{% url 'toggle_like' post.pk %}" aria-pressed="{{ post.user_liked|yesno:'true,false' }}" aria-label="{% if post.user_liked %}Unlike{% else %}Like{% endif %} {{ post.author.username }}’s post"><span class="heart-icon" aria-hidden="true">{% if post.user_liked %}♥{% else %}♡{% endif %}</span><span class="like-label">{% if post.user_liked %}Liked{% else %}Like{% endif %}</span></button>
+    <a class="action-button" href="#comments-{{ post.pk }}"><span aria-hidden="true">▢</span> Comment <span>{{ post.comment_count|default:post.comments.count }}</span></a>
+  </div>
+  <p class="post-likes"><strong class="like-count" aria-live="polite">{{ post.like_count|default:post.likes.count }}</strong> <span class="post-likes-label">{% if post.like_count|default:post.likes.count == 1 %}like{% else %}likes{% endif %}</span></p>
+  <section class="comments" id="comments-{{ post.pk }}" aria-label="Comments on {{ post.author.username }}’s post">
+    <h3>Conversation <span>{{ post.comment_count|default:post.comments.count }}</span></h3>
+    {% for comment in post.comments.all %}
+      <div class="comment"><a class="comment-avatar avatar" href="{% url 'profile' comment.author.username %}" aria-label="@{{ comment.author.username }} profile">{% if comment.author.profile.avatar %}<img src="{{ comment.author.profile.avatar.url }}" alt="">{% else %}{{ comment.author.username|first|upper }}{% endif %}</a><div class="comment-body"><div class="comment-meta"><a href="{% url 'profile' comment.author.username %}"><strong>@{{ comment.author.username }}</strong></a><time datetime="{{ comment.created_at|date:'c' }}">{{ comment.created_at|timesince }} ago</time></div><p>{{ comment.content|linebreaksbr }}</p></div>{% if user == comment.author %}<form class="comment-delete" method="post" action="{% url 'delete_comment' comment.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{% if request.resolver_match.url_name == 'feed' %}feed{% else %}profile{% endif %}"><button class="text-button danger" type="submit" aria-label="Delete your comment">Delete</button></form>{% endif %}</div>
+    {% empty %}<p class="muted no-comments">No comments yet. Start the conversation.</p>{% endfor %}
+    {% if user.is_authenticated %}<form class="comment-form" method="post" action="{% url 'add_comment' post.pk %}">{% csrf_token %}<label class="sr-only" for="comment-{{ post.pk }}">Write a comment</label><input id="comment-{{ post.pk }}" name="content" maxlength="500" required placeholder="Add a comment…"><input type="hidden" name="next" value="{% if request.resolver_match.url_name == 'feed' %}feed{% else %}profile{% endif %}"><button type="submit" aria-label="Post comment">➤</button></form>{% else %}<p class="muted sign-in-note"><a href="{% url 'login' %}">Log in</a> to join the conversation.</p>{% endif %}
+  </section>
+</article>
